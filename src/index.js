@@ -75,7 +75,7 @@ async function drawPlayers() {
     numPlayer1 = Math.floor(Math.random() * 6) + 1;
     numPlayer2 = Math.floor(Math.random() * 6) + 1;
 
-    if(numPlayer1 == numPlayer2) {
+    if(numPlayer1 === numPlayer2) {
         numPlayer2 = Math.floor(Math.random() * 6) + 1;
     }
 
@@ -143,20 +143,38 @@ async function playRaceEngine(player1, player2) {
         switch (block) {
             case 'RETA':
                 testResults1 = diceResults1 + player1.VELOCIDADE;
-                testResults2 = diceResults2 + player2.MANOBRABILIDADE;
+                testResults2 = diceResults2 + player2.VELOCIDADE;
                 break;
             case 'CURVA':
-                testResults1 = diceResults1 + player1.VELOCIDADE;
+                testResults1 = diceResults1 + player1.MANOBRABILIDADE;
                 testResults2 = diceResults2 + player2.MANOBRABILIDADE;
                 break;
             default:
+                testResults1 = diceResults1 + player1.PODER;
+                testResults2 = diceResults2 + player2.PODER;
         }
 
         if (testResults1 > testResults2) {
-            player1.PONTOS += 1;
+            if (block !== 'DUELO') {
+                player1.PONTOS += 1
+            }else{
+                if (player2.PONTOS >= 1) {
+                    player2.PONTOS --;
+                }
+            }
+        } else if (testResults2 > testResults1) {
+            if (block !== 'DUELO') {
+                player2.PONTOS += 1
+            }else{
+                if (player1.PONTOS >= 1) {
+                    player1.PONTOS --;
+                }
+            }
         } else {
-            player2.PONTOS += 1;
+            //console log
         }
+
+        console.log(`Fim da rodada ${round} realizada em ${block}\n${player1.NOME} fez: ${testResults1}\n${player2.NOME} fez: ${testResults2}`)
     }
 }
 
