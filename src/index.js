@@ -49,16 +49,21 @@ const charDonkeyKong = {
 let player1, player2;
 
 async function drawBlock() {
-    block = Math.floor(Math.random() * 3) + 1;
+    let block = Math.floor(Math.random() * 3) + 1;
+    let result
 
     switch (block) {
         case 1: // Reta
+            result = "RETA";
             break;
         case 2: // Curva
+            result = "CURVA";
             break;
         default: // Duelo
-
+            result = "DUELO";
     }
+
+    return result;
 }
 
 async function rollDice() {
@@ -67,20 +72,69 @@ async function rollDice() {
 
 //Sortear quem serão os competidores
 async function drawPlayers() {
-    player1 = Math.floor(Math.random() * 6) + 1;
-    player2 = Math.floor(Math.random() * 6) + 1;
+    numPlayer1 = Math.floor(Math.random() * 6) + 1;
+    numPlayer2 = Math.floor(Math.random() * 6) + 1;
 
-    if($player1 == $player2) {
-        player2 = Math.floor(Math.random() * 6) + 1;
+    if(numPlayer1 == numPlayer2) {
+        numPlayer2 = Math.floor(Math.random() * 6) + 1;
+    }
+
+    switch(numPlayer1) {
+        case 1: // charMario
+            player1 = charMario;
+            break;
+        case 2: // charBowser
+            player1 = charBowser;
+            break;
+        case 3: // charPeach
+            player1 = charPeach;
+            break;
+        case 4: // charLuigi
+            player1 = charLuigi;
+            break;
+        case 5: // charYoshi
+            player1 = charYoshi;
+            break;
+        case 6: // charDonkeyKong
+            player1 = charDonkeyKong;
+            break;
+    }
+
+    switch(numPlayer2) {
+        case 1: // charMario
+            player2 = charMario;
+            break;
+        case 2: // charBowser
+            player2 = charBowser;
+            break;
+        case 3: // charPeach
+            player2 = charPeach;
+            break;
+        case 4: // charLuigi
+            player2 = charLuigi;
+            break;
+        case 5: // charYoshi
+            player2 = charYoshi;
+            break;
+        case 6: // charDonkeyKong
+            player2 = charDonkeyKong;
+            break;
     }
 }
 
 async function playRaceEngine(player1, player2) {
-    
+    for (let round = 1; round <= 5; round++) {
+        console.log("Rodada: " + round);
+
+
+        // sortear bloco
+        let block = await drawBlock();
+        console.log("Bloco: " + round);
+    }
 }
 
 (async function main() {
     console.log(`Corrida entre x e y começando...`);
 
-    await playRaceEngine(player1, player2);
+    await drawPlayers();
 })()
