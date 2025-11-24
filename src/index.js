@@ -123,18 +123,45 @@ async function drawPlayers() {
 }
 
 async function playRaceEngine(player1, player2) {
+    console.log(`Corrida entre ${player1.NOME} e ${player2.NOME} começando...`);
+
     for (let round = 1; round <= 5; round++) {
-        console.log("Rodada: " + round);
-
-
-        // sortear bloco
+        // sortear bloco de pista
         let block = await drawBlock();
-        console.log("Bloco: " + round);
+
+        // resultado dos dados
+        let diceResults1 = await rollDice();
+        let diceResults2 = await rollDice();
+
+        // resultado dos testes
+        let testResults1 = 0;
+        let testResults2 = 0;
+
+        console.log("Início da rodada: " + round);
+        console.log("O confronto será em: " + block);
+
+        switch (block) {
+            case 'RETA':
+                testResults1 = diceResults1 + player1.VELOCIDADE;
+                testResults2 = diceResults2 + player2.MANOBRABILIDADE;
+                break;
+            case 'CURVA':
+                testResults1 = diceResults1 + player1.VELOCIDADE;
+                testResults2 = diceResults2 + player2.MANOBRABILIDADE;
+                break;
+            default:
+        }
+
+        if (testResults1 > testResults2) {
+            player1.PONTOS += 1;
+        } else {
+            player2.PONTOS += 1;
+        }
     }
 }
 
 (async function main() {
-    console.log(`Corrida entre x e y começando...`);
-
     await drawPlayers();
+
+    await playRaceEngine(player1, player2);
 })()
