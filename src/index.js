@@ -122,6 +122,20 @@ async function drawPlayers() {
     }
 }
 
+async function defineWinner(player1, player2) {
+    console.log("Resultado final:");
+    console.log(`${player1.NOME}: ${player1.PONTOS} ponto(s)`);
+    console.log(`${player2.NOME}: ${player2.PONTOS} ponto(s)`);
+
+    if (player1.PONTOS > player2.PONTOS) {
+        console.log(`\n${player1.NOME} venceu a corrida! Parabéns! 🏆`);
+    } else if (player2.PONTOS > player1.PONTOS) {
+        console.log(`\n${player2.NOME} venceu a corrida! Parabéns! 🏆`);
+    } else {
+        console.log(`A corrida terminou empatada`);
+    }
+}
+
 async function playRaceEngine(player1, player2) {
     console.log(`Corrida entre ${player1.NOME} e ${player2.NOME} começando...`);
 
@@ -140,41 +154,66 @@ async function playRaceEngine(player1, player2) {
         console.log("Início da rodada: " + round);
         console.log("O confronto será em: " + block);
 
-        switch (block) {
-            case 'RETA':
-                testResults1 = diceResults1 + player1.VELOCIDADE;
-                testResults2 = diceResults2 + player2.VELOCIDADE;
-                break;
-            case 'CURVA':
-                testResults1 = diceResults1 + player1.MANOBRABILIDADE;
-                testResults2 = diceResults2 + player2.MANOBRABILIDADE;
-                break;
-            default:
-                testResults1 = diceResults1 + player1.PODER;
-                testResults2 = diceResults2 + player2.PODER;
+        if (block === 'RETA') {
+            testResults1 = diceResults1 + player1.VELOCIDADE;
+            testResults2 = diceResults2 + player2.VELOCIDADE;
+
+            console.log(`O ${player1.NOME} fez: ${player1.VELOCIDADE} + ${diceResults1} = ${testResults1}`);
+            console.log(`O ${player2.NOME} fez: ${player2.VELOCIDADE} + ${diceResults2} = ${testResults2}`);
+
+            if (testResults1 > testResults2) {
+                player1.PONTOS++;
+                console.log(`O ${player1.NOME} ganhou a rodada ${round}`);
+            } else if (testResults2 > testResults1) {
+                player2.PONTOS++;
+                console.log(`O ${player2.NOME} ganhou a rodada ${round}`);
+            } else {
+                console.log(`A rodada ${round} terminou empatada`);
+            }
         }
 
-        if (testResults1 > testResults2) {
-            if (block !== 'DUELO') {
-                player1.PONTOS += 1
-            }else{
+        if (block === 'CURVA') {
+            testResults1 = diceResults1 + player1.MANOBRABILIDADE;
+            testResults2 = diceResults2 + player2.MANOBRABILIDADE;
+
+            console.log(`O ${player1.NOME} fez: ${player1.MANOBRABILIDADE} + ${diceResults1} = ${testResults1}`);
+            console.log(`O ${player2.NOME} fez: ${player2.MANOBRABILIDADE} + ${diceResults2} = ${testResults2}`);
+
+            if (testResults1 > testResults2) {
+                player1.PONTOS++;
+                console.log(`O ${player1.NOME} ganhou a rodada ${round}`);
+            } else if (testResults2 > testResults1) {
+                player2.PONTOS++;
+                console.log(`O ${player2.NOME} ganhou a rodada ${round}`);
+            } else {
+                console.log(`A rodada ${round} terminou empatada`);
+            }
+        }
+
+        if (block === 'DUELO') {
+            testResults1 = diceResults1 + player1.PODER;
+            testResults2 = diceResults2 + player2.PODER;
+
+            console.log(`O ${player1.NOME} fez: ${player1.PODER} + ${diceResults1} = ${testResults1}`);
+            console.log(`O ${player2.NOME} fez: ${player2.PODER} + ${diceResults2} = ${testResults2}`);
+
+            if (testResults1 > testResults2) {
                 if (player2.PONTOS >= 1) {
-                    player2.PONTOS --;
+                    player2.PONTOS--;
                 }
-            }
-        } else if (testResults2 > testResults1) {
-            if (block !== 'DUELO') {
-                player2.PONTOS += 1
-            }else{
+                console.log(`O ${player1.NOME} ganhou a rodada ${round}`);
+            } else if (testResults2 > testResults1) {
                 if (player1.PONTOS >= 1) {
-                    player1.PONTOS --;
+                    player1.PONTOS--;
                 }
+                console.log(`O ${player2.NOME} ganhou a rodada ${round}`);
+            } else {
+                console.log(`A rodada ${round} terminou empatada`);
             }
-        } else {
-            //console log
         }
 
-        console.log(`Fim da rodada ${round} realizada em ${block}\n${player1.NOME} fez: ${testResults1}\n${player2.NOME} fez: ${testResults2}`)
+        console.log(`Fim da rodada ${round} realizada em ${block}\n${player1.NOME} está com: ${player1.PONTOS} pontos\n${player2.NOME} está com: ${player2.PONTOS} pontos`);
+        console.log('--------------------------------------------');
     }
 }
 
@@ -182,4 +221,5 @@ async function playRaceEngine(player1, player2) {
     await drawPlayers();
 
     await playRaceEngine(player1, player2);
+    await defineWinner(player1, player2);
 })()
